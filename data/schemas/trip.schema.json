@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Trip",
+  "type": "object",
+  "required": ["freight", "distance_km", "fuel_price", "vehicle_efficiency_kmpl", "toll_cost", "driver_cost", "other_cost"],
+  "properties": {
+    "freight": {"type": "number", "minimum": 0},
+    "distance_km": {"type": "number", "minimum": 0},
+    "fuel_price": {"type": "number", "minimum": 0},
+    "vehicle_efficiency_kmpl": {"type": "number", "exclusiveMinimum": 0},
+    "toll_cost": {"type": "number", "minimum": 0},
+    "driver_cost": {"type": "number", "minimum": 0},
+    "other_cost": {"type": "number", "minimum": 0}
+  }
+}

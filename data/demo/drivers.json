@@ -1,0 +1,32 @@
+[
+  {
+    "id": "DRV-001",
+    "name": "Arun Kumar",
+    "completed_trips": 87,
+    "on_time_trips": 82,
+    "cancelled_trips": 2,
+    "delayed_trips": 5,
+    "average_rating": 4.6,
+    "experience_years": 6
+  },
+  {
+    "id": "DRV-002",
+    "name": "Manoj S",
+    "completed_trips": 54,
+    "on_time_trips": 46,
+    "cancelled_trips": 4,
+    "delayed_trips": 8,
+    "average_rating": 4.1,
+    "experience_years": 3
+  },
+  {
+    "id": "DRV-003",
+    "name": "Ravi Prakash",
+    "completed_trips": 18,
+    "on_time_trips": 16,
+    "cancelled_trips": 0,
+    "delayed_trips": 2,
+    "average_rating": 4.7,
+    "experience_years": 2
+  }
+]

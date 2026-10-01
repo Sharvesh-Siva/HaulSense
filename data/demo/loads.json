@@ -1,0 +1,32 @@
+[
+  {
+    "id": "LOAD-001",
+    "origin": "Chennai",
+    "destination": "Bengaluru",
+    "distance_km": 350,
+    "freight": 18000,
+    "vehicle_type": "Light Commercial Vehicle",
+    "required_capacity_tonnes": 2.0,
+    "status": "available"
+  },
+  {
+    "id": "LOAD-002",
+    "origin": "Bengaluru",
+    "destination": "Chennai",
+    "distance_km": 350,
+    "freight": 12000,
+    "vehicle_type": "Light Commercial Vehicle",
+    "required_capacity_tonnes": 1.8,
+    "status": "available"
+  },
+  {
+    "id": "LOAD-003",
+    "origin": "Bengaluru",
+    "destination": "Hyderabad",
+    "distance_km": 570,
+    "freight": 18500,
+    "vehicle_type": "Medium Truck",
+    "required_capacity_tonnes": 5.0,
+    "status": "available"
+  }
+]

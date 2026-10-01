@@ -1,0 +1,26 @@
+[
+  {
+    "id": "VEH-001",
+    "registration": "TN01AB1234",
+    "type": "Light Commercial Vehicle",
+    "fuel_type": "diesel",
+    "efficiency_kmpl": 8.0,
+    "capacity_tonnes": 2.5
+  },
+  {
+    "id": "VEH-002",
+    "registration": "TN02CD5678",
+    "type": "Medium Truck",
+    "fuel_type": "diesel",
+    "efficiency_kmpl": 6.5,
+    "capacity_tonnes": 7.0
+  },
+  {
+    "id": "VEH-003",
+    "registration": "TN10EF9012",
+    "type": "Mini Truck",
+    "fuel_type": "diesel",
+    "efficiency_kmpl": 10.0,
+    "capacity_tonnes": 1.5
+  }
+]
