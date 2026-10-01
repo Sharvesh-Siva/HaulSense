@@ -1,16 +1,14 @@
 # Frontend
 
-The user-facing HaulSense application.
+The user-facing HaulSense application layer.
 
-## Planned stack
+## Current Status
 
-- React
-- Vite
-- Tailwind CSS
-- Leaflet
-- OpenStreetMap
+Frontend implementation is intentionally deferred.
 
-## Screens
+The current project phase focuses on validating the **HaulSense agent workflow and deterministic decision tools** independently of the user interface.
+
+## Future Screens
 
 - Dashboard
 - Create Trip
@@ -19,4 +17,8 @@ The user-facing HaulSense application.
 - Trust Passport
 - Return Opportunities
 
-The first implementation target is the frontend shell plus Leaflet/OpenStreetMap route visualization.
+## Current Priority
+
+Do not add map-provider dependencies at this stage.
+
+The frontend can be implemented later after the agent workflow, business logic, and test suite are stable.
