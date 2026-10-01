@@ -1,21 +1,19 @@
 # HaulSense System Architecture
 
+## Current Architecture
+
 ```text
 +-----------------------+
-|       FRONTEND        |
-| Dashboard | Trip | Map|
-+-----------+-----------+
-            |
-            v
-+-----------------------+
-|       API LAYER       |
+|   INPUT / USER DATA   |
+| Load + Trip Details   |
 +-----------+-----------+
             |
             v
 +-----------------------+
 |     HAULSENSE AGENT   |
-| intent | tool routing |
-| reasoning | response  |
+| intent | validation   |
+| tool routing | reason |
+| result aggregation    |
 +-----------+-----------+
             |
    +--------+--------+--------+--------+
@@ -29,25 +27,62 @@ Profitability   Negotiation       Trust Passport
              Return Trip Engine
                      |
                      v
-                 DATA LAYER
+             Decision Aggregation
+                     |
+                     v
+          EXPLAINABLE RECOMMENDATION
 ```
-
-## Frontend
-
-React/Vite application with Tailwind CSS. Leaflet renders maps using OpenStreetMap tiles. The map layer is kept separate from financial decision logic.
 
 ## Agent Layer
 
-The agent interprets requests, selects tools, supplies inputs, checks results, invokes additional tools when required, and explains the final recommendation.
+The agent interprets the request, validates required inputs, selects the appropriate deterministic tools, supplies inputs, checks results, invokes additional tools when required, and explains the final recommendation.
 
 ## Tool Layer
 
+The four core tools are:
+
+1. Trip Profitability Simulator
+2. What-if / Negotiation Simulator
+3. Trust Passport
+4. Return Trip Opportunity Engine
+
 Numerical calculations are deterministic. The language model should not invent financial outputs when a tool can calculate them.
+
+## Workflow
+
+```text
+Load Request
+    ↓
+Validate Inputs
+    ↓
+Profitability Analysis
+    ↓
+Trust / Risk Evaluation
+    ↓
+Negotiation Simulation if required
+    ↓
+Return Trip Analysis
+    ↓
+Aggregate Results
+    ↓
+ACCEPT / NEGOTIATE / REVIEW / REJECT
+```
 
 ## Data Layer
 
-The prototype uses JSON demo data. Persistent storage can be introduced later for trips, drivers, vehicles and loads.
+The current prototype uses JSON demo data for:
+
+- Drivers
+- Vehicles
+- Loads
+- Trip inputs
+
+Persistent storage can be introduced later.
+
+## Frontend Scope
+
+Frontend implementation is intentionally deferred during the current phase. The agent and decision-tool workflow must be validated independently of any mapping or external map-service integration.
 
 ## Design Principle
 
-**AI orchestrates; deterministic tools calculate.** This is central to HaulSense reliability and testability.
+**AI orchestrates; deterministic tools calculate.** This is central to HaulSense reliability, explainability, and testability.
