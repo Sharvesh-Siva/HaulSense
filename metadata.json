@@ -1,0 +1,6 @@
+{
+  "name": "HaulSense - Agentic Freight Decision Platform",
+  "description": "Agentic AI decision platform for transport operators in India, evaluating complete trip cycles, driver trust, vehicle matching, and return load intelligence.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

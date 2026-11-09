@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-heading: 'Space Grotesk', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --color-dark-bg: #0B0F17;
+  --color-dark-surface: #111827;
+  --color-dark-card: #141B26;
+  --color-dark-border: #1F2937;
+  --color-indigo-accent: #6366F1;
+  --color-purple-accent: #4F46E5;
+  --color-teal-accent: #10B981;
+  --color-amber-accent: #F59E0B;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #0B0F17;
+  color: #F3F4F6;
+  overflow-x: hidden;
+}
+
+.font-heading {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Glass & Glow utilities */
+.glow-card {
+  background: rgba(20, 27, 38, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glow-card:hover {
+  border-color: rgba(99, 102, 241, 0.35);
+}
+
+/* Operational styling */
+.road-line {
+  background-image: repeating-linear-gradient(
+    90deg,
+    #6366F1 0,
+    #6366F1 16px,
+    transparent 16px,
+    transparent 28px
+  );
+  height: 2px;
+}
