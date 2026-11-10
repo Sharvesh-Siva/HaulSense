@@ -1,89 +1,258 @@
-# HaulSense — Agentic Freight Decision Platform
+# HaulSense
+### Agentic Freight Decision Platform
 
-HaulSense is an agentic AI decision platform designed for transport operators and fleet owners in India. Instead of making high-stakes dispatch choices based on fragmented phone calls and gut feeling, dispatchers ask the HaulSense Agent: **"Should we accept this shipment?"**
+<p align="center"><strong>Make every dispatch decision with the complete trip in view.</strong><br/>An AI-assisted freight decision and fleet operations platform for transport operators.</p>
 
-The agent works out what it needs to know, dynamically selects and calls deterministic logistics tools, evaluates the results, and delivers a definitive operational recommendation: **ACCEPT, ACCEPT + SECURE RETURN LOAD, NEGOTIATE, REASSIGN, WAIT, or REJECT**.
+<p align="center">
+<img alt="React 19" src="https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white" />
+<img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-Strict-blue?logo=typescript" />
+<img alt="Express" src="https://img.shields.io/badge/Backend-Express-111827?logo=express" />
+<img alt="Google Maps" src="https://img.shields.io/badge/Maps-Google%20Maps-4285F4?logo=googlemaps&logoColor=white" />
+<img alt="Gemini" src="https://img.shields.io/badge/AI-Gemini-8E75B2?logo=googlegemini&logoColor=white" />
+<img alt="Status" src="https://img.shields.io/badge/Status-Prototype-orange" />
+</p>
 
----
+HaulSense explores a practical question for freight operators:
 
-## 1. The Core Innovation: Complete Trip-Cycle Evaluation
+> **Should we accept this shipment, negotiate it, assign another vehicle or driver, or secure a return load before committing the truck?**
 
-Most freight evaluation tools only analyze the outbound leg in isolation. A haul that looks profitable on paper can wipe out all earnings if the truck is forced to return empty (deadhead).
+Freight decisions are often split across calls, spreadsheets and disconnected estimates. HaulSense brings shipment economics, fleet suitability, driver reliability, operational risk and return-load opportunities into one decision-support workflow.
 
-HaulSense evaluates the **complete trip cycle** (outbound + empty return penalty vs. compatible return load gain) using exact formulas, diesel rates (₹92/L), toll costs, and driver allowances.
+Its central engineering principle is simple: **code calculates; the AI agent reasons over validated tool results.** The agent can interpret a request, select logistics tools, inspect their outputs and explain an operational recommendation. It should not invent numerical results.
 
----
+## Contents
+- [Why HaulSense](#why-haulsense)
+- [Platform capabilities](#platform-capabilities)
+- [Agent decision workflow](#agent-decision-workflow)
+- [Technology](#technology)
+- [Architecture](#architecture)
+- [Run locally](#run-locally)
+- [Configuration](#configuration)
+- [Demo boundaries](#demo-boundaries)
+- [Security](#security)
+- [Validation](#validation)
+- [Documentation](#documentation)
+- [Roadmap](#roadmap)
 
-## 2. The Golden Rule: AI Decides, Code Calculates
+## Why HaulSense
 
-- **AI Responsibilities**: Understanding goals, dynamic tool selection, observing factual tool results, adjusting plans, assessing trade-offs, and formulating the final operational verdict.
-- **Deterministic Code Responsibilities**: All arithmetic, fuel costs, break-even calculations, margin percentages, haversine radii, and risk points are computed strictly in deterministic TypeScript code validated with Zod. The AI never calculates a rupee amount itself.
+A quoted freight rate is not the same as the actual trip-cycle value. Fuel, tolls, driver allowances, vehicle suitability, delivery constraints and the probability of an empty return can change the decision.
 
----
+HaulSense evaluates the complete trip cycle—not merely the outbound price per kilometre.
 
-## 3. The 8 Agent Tools
+- Evaluate outbound trip economics.
+- Account for empty-return (deadhead) cost.
+- Search for geographically and temporally compatible return loads.
+- Compare the effect of a secured backhaul.
+- Check vehicle capacity and cargo compatibility.
+- Include driver reliability and operational risk in the decision.
 
-1. `calculate_trip_profit`: Fuel cost, operating costs, profit, margin percentage, break-even freight.
-2. `what_if_simulator`: Evaluates sensitivity under freight rate, fuel price, toll, or mileage adjustments.
-3. `get_trust_passport`: Retrieves driver trust score (0–100), on-time rate, cancellations, incidents, and reliability signal.
-4. `find_return_trip`: Searches compatible backhauls within geographic and timing bounds; calculates full roundtrip cycle economics.
-5. `match_vehicle`: Matches available fleet vehicles based on payload capacity and cargo compatibility.
-6. `simulate_negotiation`: Computes 10% floor and 20% target margins, counter-offers, and commercial reality (< 25% uplift).
-7. `evaluate_risk`: Multidimensional point-based scoring (0–24 LOW, 25–49 MEDIUM, 50+ HIGH).
-8. `submit_recommendation` (Terminal Tool): Submits the final operational commitment with 3–5 decisive factors and an immediate next directive. Enforces strict business guardrails.
+## Platform capabilities
 
----
+The repository contains these application areas and decision-support modules:
 
-## 4. Test Scenarios & Exact Mathematical Baselines
+| Area | Purpose |
+| --- | --- |
+| Operations dashboard | Fleet, shipment and operational overview |
+| Live Fleet Tracking | Map-based fleet visibility and trip telemetry workspace |
+| Shipments | Shipment records and lifecycle operations |
+| Vehicles & Drivers | Fleet resources, driver records and matching |
+| Return Loads | Backhaul discovery and trip-cycle evaluation |
+| Agent workspace | Shipment-specific AI decision workflow |
+| Driver portal | Trips, trip map, vehicles, loads, earnings, trust, health and documents |
+| Trip communications | Driver–manager trip communication |
+| Diagnostics | Development and ground-truth inspection |
 
-- **Golden Case (`S-GOLDEN`, Chennai → Bengaluru)**:
-  - 7t FMCG, offered ₹25,000, 350 km.
-  - Fuel: ₹8,050; Total Cost: ₹13,550; Profit: ₹11,450; Margin: 45.8%.
-  - Empty return cost: ₹10,300; Outbound-only cycle net: ₹1,150.
-  - Secured backhaul R1 net: ₹4,050; Trip-cycle profit: ₹15,500; Improvement: +₹14,350.
-  - **Verdict**: `ACCEPT + SECURE RETURN LOAD`.
+### Agent toolset
 
-- **Case A (`S-CASE-A`, Chennai → Vellore)**:
-  - 5t general, offered ₹12,000, 140 km.
-  - Profit: ₹6,480 (54.0% margin). Short high-margin corridor.
-  - **Verdict**: `ACCEPT`.
+1. **Trip profitability** — fuel and operating costs, profit, margin and break-even freight.
+2. **What-if simulation** — sensitivity to freight rate, fuel price, tolls and mileage.
+3. **Driver trust passport** — configured reliability indicators and incident history.
+4. **Return-trip search** — compatible backhauls and round-trip economics.
+5. **Vehicle matching** — payload capacity and cargo compatibility.
+6. **Negotiation simulation** — margin-based counter-offers and commercial limits.
+7. **Risk evaluation** — explicit point-based operational risk scoring.
+8. **Recommendation submission** — structured decision, decisive factors and next directive.
 
-- **Case B (`S-CASE-B`, Chennai → Madurai)**:
-  - 9t general, offered ₹21,000, 460 km.
-  - Profit: ₹3,520 (16.8% margin; below 20% target).
-  - Target counter-offer: ₹21,850 (+4.0% uplift; realistic).
-  - **Verdict**: `NEGOTIATE ₹21,850`.
+### Possible decision outputs
 
-- **Case D (`S-CASE-D`, Chennai → Bengaluru Electronics)**:
-  - High-value cargo, tight deadline slack (1.2h), driver DRV-002 with 54 trust score and 3 incidents.
-  - Risk Level: HIGH (100 pts).
-  - **Verdict**: `REASSIGN` to DRV-001 or DRV-003.
+- **ACCEPT**
+- **ACCEPT + SECURE RETURN LOAD**
+- **NEGOTIATE**
+- **REASSIGN**
+- **WAIT**
+- **REJECT**
 
-- **Case E (`S-CASE-E`, Chennai → Kochi)**:
-  - 10t general, offered ₹24,000, 700 km.
-  - Total cost: ₹26,900; Profit: -₹2,900 (-12.1% margin).
-  - Counter-offer requires +40.2% price hike (>25% commercial limit).
-  - **Verdict**: `REJECT`.
+These are decision-support outcomes. A human operator remains responsible for approving real-world dispatch commitments.
 
----
+## Agent decision workflow
 
-## 5. Getting Started & Running the Application
+```mermaid
+flowchart TD
+ A[Manager selects a shipment] --> B[Agent interprets the request]
+ B --> C[Agent selects logistics tools]
+ C --> D[Deterministic tools calculate facts]
+ D --> E[Agent evaluates validated results]
+ E --> F{Operational recommendation}
+ F --> G[Accept]
+ F --> H[Secure return load]
+ F --> I[Negotiate]
+ F --> J[Reassign]
+ F --> K[Wait or reject]
+ G --> L[Explain evidence and next action]
+ H --> L
+ I --> L
+ J --> L
+ K --> L
+```
 
-### Installation & Run
+| Deterministic application logic | AI agent |
+| --- | --- |
+| Cost, margin and break-even calculations | Understands the operator's question |
+| Vehicle-capacity validation | Selects relevant tools |
+| Risk-score computation | Interprets tool results |
+| Input and output schema validation | Explains trade-offs |
+| Lifecycle validation | Produces a next-step directive |
+
+## Technology
+
+| Layer | Technology |
+| --- | --- |
+| UI | React 19, TypeScript |
+| Build tooling | Vite |
+| Styling | Tailwind CSS 4 |
+| Backend | Node.js, Express |
+| AI integration | Google GenAI SDK |
+| Maps | Google Maps React integration |
+| Validation | Zod |
+| Charts | Recharts |
+| Motion | Motion |
+| Icons | Lucide React |
+| Routing | React Router |
+
+## Architecture
+
+```text
+.
+├── server.ts                 # Express API server
+├── package.json              # Scripts and dependencies
+├── vite.config.ts            # Vite configuration
+├── .env.example              # Configuration template
+└── src/
+    ├── App.tsx               # Routes and protected layouts
+    ├── agent/                # Agent orchestration
+    ├── components/           # Manager and driver UI
+    ├── context/              # Authentication and logistics state
+    ├── data/                 # Domain and demo data
+    ├── pages/                # Manager and driver pages
+    ├── tools/                # Deterministic agent tools
+    ├── types/                # Shared domain and API types
+    ├── utils/                # Shared utilities
+    ├── config.ts             # Business and agent constants
+    └── main.tsx              # React entry point
+```
+
+See [Architecture & Data Flow](docs/ARCHITECTURE.md) for component boundaries, routes and trust boundaries.
+
+## Run locally
+
+Requirements: Node.js compatible with the installed Vite version and npm.
 
 ```bash
-# Install dependencies
 npm install
-
-# Run the development server (Express backend + Vite frontend with SSE streaming)
 npm run dev
 ```
 
-Open your browser at `http://localhost:3000`.
+Open the local URL printed by the development server (the Express server defaults to port **3000**).
 
-### Credentials
+Build and start:
 
-- **Manager Workspace**: `manager@haulsense.in` / `haul123`
-  - *(Shortcut: Click the top-left HaulSense hexagon emblem on the landing page for immediate preloaded manager access)*
-- **Driver Portal**: Driver ID: `DRV-001`, PIN: `1234`
-- **Diagnostics & Ground-Truth Test**: Navigate to `/diagnostics`
+```bash
+npm run build
+npm run start
+```
+
+TypeScript validation:
+
+```bash
+npm run lint
+```
+
+The current `package.json` does not define an `npm test` script. Do not assume a test runner is configured until one is added.
+
+## Configuration
+
+Copy the template for local development:
+
+```bash
+cp .env.example .env
+```
+
+| Variable | Purpose |
+| --- | --- |
+| `GEMINI_API_KEY` | Server-side Gemini API access |
+| `APP_URL` | Public application URL where required |
+| `VITE_GOOGLE_MAPS_API_KEY` | Browser map loading key |
+
+Never commit real secrets. Variables prefixed with `VITE_` are exposed to the browser. Restrict the Maps key by HTTP referrer and permitted APIs. Keep privileged credentials server-side.
+
+## Demo boundaries
+
+This repository includes seeded logistics records and demo-oriented behavior. Some initial fleet telemetry is explicitly marked as **not live device GPS**. A map marker is not proof that a driver's phone is transmitting coordinates.
+
+The inspected server implementation uses in-memory session, audit and telemetry stores. These are useful for prototypes but are not durable multi-instance production infrastructure: process restarts can clear them, and separate server instances do not automatically share state.
+
+The source also contains demo authentication credentials and simulator behavior. Treat these as publicly exposed development shortcuts, not real identity verification. Replace them before any real deployment.
+
+The repository documents Gemini and Google Maps integration. Do not assume a live eGain deployment, production identity provider, persistent cloud database, native background GPS service or production dispatch integration exists unless separately configured and tested.
+
+## Security
+
+- Enforce authorization on the server for every protected operation.
+- Scope records by authenticated user and organization.
+- Never use seeded identities or simulator shortcuts for real accounts.
+- Keep privileged keys out of client bundles and Git history.
+- Validate request payloads and trip-state transitions.
+- Treat GPS coordinates, trip history and documents as sensitive operational data.
+- Define location-sharing notice, access and retention controls.
+- Do not claim production security until the hardening checklist is verified.
+
+Read [SECURITY.md](SECURITY.md) and [Security & Data Boundaries](docs/SECURITY_AND_DATA_BOUNDARIES.md).
+
+## Validation
+
+Before proposing or merging changes:
+1. Install dependencies.
+2. Run `npm run lint`.
+3. Run `npm run build`.
+4. Exercise manager and driver routes.
+5. Test API authorization and invalid inputs.
+6. Test map failure and missing-key states.
+7. Confirm demo records are labelled and no real credentials are committed.
+
+Only report checks that were actually executed.
+
+## Documentation
+
+- [Project Guide](docs/PROJECT_GUIDE.md) — product purpose, user journeys, calculations and domain language.
+- [Architecture & Data Flow](docs/ARCHITECTURE.md) — application boundaries, agent flow and current data architecture.
+- [Security & Data Boundaries](docs/SECURITY_AND_DATA_BOUNDARIES.md) — known prototype limitations and production hardening.
+- [Contributing](CONTRIBUTING.md) — setup, engineering principles and validation.
+- [Security Policy](SECURITY.md) — responsible vulnerability reporting.
+
+## Roadmap
+
+These are improvement areas, not claims that every item is already implemented:
+
+- Durable identity and organization-scoped authorization.
+- Persistent shipment, fleet, telemetry and audit storage.
+- Verified live smartphone GPS ingestion and retention controls.
+- Native Android foreground location tracking for screen-locked trips.
+- Traffic-aware route alternatives with measured API usage and fallback behavior.
+- Conflict-safe dispatch and assignment workflows.
+- Automated tests, CI and operational monitoring.
+- Evaluated eGain customer-support workflows and verified backend actions.
+
+---
+
+**HaulSense is an evolving engineering project.** Its documentation distinguishes checked-in code, demo behavior and future production requirements so contributors, reviewers and operators can understand what the system actually does.
